@@ -24,7 +24,7 @@ curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
 ### Step 2 — Clone, Init, Apply, and Verify
 > **Run in: AWS CloudShell** (your AWS account is auto-detected from your session)
 ```bash
-git clone https://github.com/YOUR_ORG/fivetran-hybrid-sandbox.git
+git clone https://github.com/fivetran-davidhowland/fivetran-hybrid-sandbox.git
 cd fivetran-hybrid-sandbox
 terraform init
 terraform apply -var="cloud=aws" -var="region=us-east-1"
@@ -49,7 +49,7 @@ terraform destroy -var="cloud=aws" -var="region=us-east-1"
 ### Step 1 — Clone, Init, Apply, and Verify
 > **Run in: Azure Cloud Shell** (your Azure subscription is auto-detected from your session)
 ```bash
-git clone https://github.com/YOUR_ORG/fivetran-hybrid-sandbox.git
+git clone https://github.com/fivetran-davidhowland/fivetran-hybrid-sandbox.git
 cd fivetran-hybrid-sandbox
 terraform init
 terraform apply -var="cloud=azure" -var="region=eastus"
@@ -74,7 +74,7 @@ terraform destroy -var="cloud=azure" -var="region=eastus"
 ### Step 1 — Clone, Init, Apply, and Verify
 > **Run in: GCP Cloud Shell** (your GCP project is auto-detected from your session)
 ```bash
-git clone https://github.com/YOUR_ORG/fivetran-hybrid-sandbox.git
+git clone https://github.com/fivetran-davidhowland/fivetran-hybrid-sandbox.git
 cd fivetran-hybrid-sandbox
 terraform init
 terraform apply -var="cloud=gcp" -var="region=us-central1" -var="gcp_project=$DEVSHELL_PROJECT_ID"
