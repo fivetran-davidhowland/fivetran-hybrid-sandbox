@@ -1,16 +1,16 @@
 # Fivetran Hybrid Deployment — Multi-Cloud Sandbox
 
-Provisions a Kubernetes cluster on AWS, Azure, or GCP ready for Fivetran Hybrid Deployment.
-kubectl is automatically configured at the end of `terraform apply` — no extra steps.
+Provisions a Kubernetes cluster ready for Fivetran Hybrid Deployment.
+Each cloud has its own folder — only the providers you need are downloaded.
+kubectl is automatically configured at the end of `terraform apply`.
 
-> **Always specify `region` explicitly.** Running your cluster in the wrong region relative to your data sources and destinations will incur significant cross-region data transfer costs.
+> **Always specify `region` to match your data source/destination and avoid cross-region transfer costs.**
 
 ---
 
 # AWS Setup
 
-> **All commands below are run inside AWS CloudShell.**
-> Open it at https://console.aws.amazon.com → click the `>_` icon in the top nav bar.
+> **Run in: AWS CloudShell** — https://console.aws.amazon.com → click `>_` in the top nav bar
 
 ### Step 1 — Install Terraform and Helm
 > **Run in: AWS CloudShell**
@@ -22,70 +22,65 @@ curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
 ```
 
 ### Step 2 — Clone, Init, Apply, and Verify
-> **Run in: AWS CloudShell** (your AWS account is auto-detected from your session)
+> **Run in: AWS CloudShell**
 ```bash
 git clone https://github.com/fivetran-davidhowland/fivetran-hybrid-sandbox.git
-cd fivetran-hybrid-sandbox
+cd fivetran-hybrid-sandbox/aws
 terraform init
-terraform apply -var="cloud=aws" -var="region=us-east-1"
-# kubectl is configured automatically — just verify:
+terraform apply -var="region=us-west-2" -var="cluster_name=fivetran-sandbox-YOURNAME"
 kubectl get nodes
 ```
 
 ### Tear Down
 > **Run in: AWS CloudShell**
 ```bash
-terraform destroy -var="cloud=aws" -var="region=us-east-1"
+terraform destroy -var="region=us-west-2" -var="cluster_name=fivetran-sandbox-YOURNAME"
 ```
 
 ---
 
 # Azure Setup
 
-> **All commands below are run inside Azure Cloud Shell.**
-> Open it at https://portal.azure.com → click the `>_` icon in the top nav bar → choose **Bash**.
+> **Run in: Azure Cloud Shell** — https://portal.azure.com → click `>_` in the top nav bar → choose **Bash**
 > Terraform and Helm are pre-installed. Your subscription is auto-detected from your session.
 
 ### Step 1 — Clone, Init, Apply, and Verify
-> **Run in: Azure Cloud Shell** (your Azure subscription is auto-detected from your session)
+> **Run in: Azure Cloud Shell**
 ```bash
 git clone https://github.com/fivetran-davidhowland/fivetran-hybrid-sandbox.git
-cd fivetran-hybrid-sandbox
+cd fivetran-hybrid-sandbox/azure
 terraform init
-terraform apply -var="cloud=azure" -var="region=eastus"
-# kubectl is configured automatically — just verify:
+terraform apply -var="region=eastus" -var="cluster_name=fivetran-sandbox-YOURNAME"
 kubectl get nodes
 ```
 
 ### Tear Down
 > **Run in: Azure Cloud Shell**
 ```bash
-terraform destroy -var="cloud=azure" -var="region=eastus"
+terraform destroy -var="region=eastus" -var="cluster_name=fivetran-sandbox-YOURNAME"
 ```
 
 ---
 
 # GCP Setup
 
-> **All commands below are run inside GCP Cloud Shell.**
-> Open it at https://console.cloud.google.com → click the `>_` icon in the top right.
-> Terraform and Helm are pre-installed. Your project is auto-detected from your session via `$DEVSHELL_PROJECT_ID`.
+> **Run in: GCP Cloud Shell** — https://console.cloud.google.com → click `>_` in the top right
+> Terraform and Helm are pre-installed. Your project is auto-detected via `$DEVSHELL_PROJECT_ID`.
 
 ### Step 1 — Clone, Init, Apply, and Verify
-> **Run in: GCP Cloud Shell** (your GCP project is auto-detected from your session)
+> **Run in: GCP Cloud Shell**
 ```bash
 git clone https://github.com/fivetran-davidhowland/fivetran-hybrid-sandbox.git
-cd fivetran-hybrid-sandbox
+cd fivetran-hybrid-sandbox/gcp
 terraform init
-terraform apply -var="cloud=gcp" -var="region=us-central1" -var="gcp_project=$DEVSHELL_PROJECT_ID"
-# kubectl is configured automatically — just verify:
+terraform apply -var="region=us-central1" -var="gcp_project=$DEVSHELL_PROJECT_ID" -var="cluster_name=fivetran-sandbox-YOURNAME"
 kubectl get nodes
 ```
 
 ### Tear Down
 > **Run in: GCP Cloud Shell**
 ```bash
-terraform destroy -var="cloud=gcp" -var="region=us-central1" -var="gcp_project=$DEVSHELL_PROJECT_ID"
+terraform destroy -var="region=us-central1" -var="gcp_project=$DEVSHELL_PROJECT_ID" -var="cluster_name=fivetran-sandbox-YOURNAME"
 ```
 
 ---
@@ -94,10 +89,9 @@ terraform destroy -var="cloud=gcp" -var="region=us-central1" -var="gcp_project=$
 
 | Parameter | Required | Description | Example values |
 |-----------|----------|-------------|----------------|
-| `cloud` | Yes | Target cloud | `aws` / `azure` / `gcp` |
-| `region` | Yes | Region to deploy — must match your data source/destination region to avoid cross-region transfer costs | AWS: `us-east-1`, `us-west-2` · Azure: `eastus`, `westus` · GCP: `us-central1`, `us-east1` |
+| `region` | Yes | Region to deploy — must match your data source/destination to avoid cross-region transfer costs | AWS: `us-east-1`, `us-west-2` · Azure: `eastus`, `westus` · GCP: `us-central1`, `us-east1` |
+| `cluster_name` | Yes | Your unique cluster name — use your name/initials to avoid conflicts | `fivetran-sandbox-david` |
 | `gcp_project` | GCP only | GCP project ID | Use `$DEVSHELL_PROJECT_ID` in Cloud Shell |
-| `cluster_name` | No | Name for the cluster (default: `fivetran-hybrid-sandbox`) | Any string |
 
 ---
 
